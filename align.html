@@ -94,7 +94,7 @@
         if (output) {
             $("#text_out").select();
             document.execCommand('copy');
-            $('#text_status').text('Copied');
+            $('#text_status').show().text('Copied');
 
             setTimeout(() => {
                 $('#text_status').hide();
