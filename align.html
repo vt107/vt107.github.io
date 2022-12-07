@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        #text_out1 {
+            padding: 8px 16px;
+        }
+    </style>
 </head>
 <body>
 
@@ -24,10 +29,11 @@
     </div>
 
     <div class="form-group">
-        <pre id="text_out1" style="background-color: whitesmoke"></pre>
+        <h5 class="mt-2" id="text_status" style="display: none"></h5>
 
-        <textarea class="form-control" rows="1" id="text_out"
-        style="opacity: 0"></textarea>
+        <pre id="text_out1" style="background-color: whitesmoke">Result goes here</pre>
+
+        <textarea class="form-control" rows="1" id="text_out" style="opacity: 0"></textarea>
     </div>
 </div>
 
@@ -39,7 +45,7 @@
         let spaceBeforeKey = 0;
 
         let temp = [];
-        lines.forEach(line => {
+        lines.forEach((line, lineIndex) => {
             let index = line.indexOf('=>');
             if (index === -1) {
                 console.log('-1', line);
@@ -49,7 +55,7 @@
             let part1 = line.substring(0, index);
             let part2 = line.substr(index + 2).trim();
 
-            if (!spaceBeforeKey) {
+            if (!spaceBeforeKey && lineIndex > 0) {
                 for (let i = 0; i < part1.length; i++) {
                     if (part1.charAt(i) !== ' ') break;
                     spaceBeforeKey++;
@@ -79,6 +85,8 @@
     });
 
     $('#btn_format').click(function() {
+        $('#text_status').text('');
+
         let output = alignArray($('#text_in').val());
         $('#text_out').val(output);
         $('#text_out1').html(output);
@@ -86,7 +94,13 @@
         if (output) {
             $("#text_out").select();
             document.execCommand('copy');
-            // alert('copied');
+            $('#text_status').text('Copied');
+
+            setTimeout(() => {
+                $('#text_status').hide();
+            }, 3000);
+        } else {
+            $('#text_out1').html('Nothing to copy');
         }
     });
 </script>
