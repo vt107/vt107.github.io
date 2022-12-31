@@ -91,7 +91,7 @@
         output = output.replace(/{/g, "[\n")
         .replace(/}/g, "\n]")
         .replace(/":/g, "\" => ")
-        .replace(/",/g, "\"\n")
+        .replace(/",/g, "\",\n")
         .replace(/,"/g, "\,\n\"")
         .replace(/],"/g, "],\n\"");
 
