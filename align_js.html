@@ -9,11 +9,6 @@
     <script src="/plugins/bootstrap/bootstrap.min.js"></script>
 
     <script src="js/common.js"></script>
-    <style>
-        #text_out1 {
-            padding: 8px 16px;
-        }
-    </style>
 </head>
 <body>
 
@@ -25,13 +20,14 @@
     </div>
 
     <div class="form-group">
+        <input class="form-control input-inline" id="indent" type="number" placeholder="Indent" value="4">
         <button class="btn btn-success" id="btn_format">Format</button>
         <button class="btn btn-danger" id="btn_clear">Clear</button>
+
+        <span id="text_status" style="display: none"></span>
     </div>
 
     <div class="form-group">
-        <h5 class="mt-2" id="text_status" style="display: none"></h5>
-
         <pre id="text_out1" style="background-color: whitesmoke">Result goes here</pre>
 
         <textarea class="form-control" rows="1" id="text_out" style="opacity: 0"></textarea>
@@ -40,6 +36,7 @@
 
 <script>
     function alignArray(text) {
+        let indent = Number($('#indent').val() || 4);
         let lines = text.split("\n").filter(x => x.trim().length);
 
         let biggestKeyLength = 0;
@@ -47,11 +44,10 @@
 
         let temp = [];
         lines.forEach((line, lineIndex) => {
-            let index = line.indexOf('=>');
-            if (index === -1) {
-                console.log('-1', line);
-                return;
-            }
+            let index = line.indexOf(':');
+
+            // Treat as a normal line
+            if (index === -1) return temp.push({part1: line, part2: ''});
 
             let part1 = line.substring(0, index);
             let part2 = line.substr(index + 2).trim();
@@ -70,19 +66,41 @@
         });
 
         let result = '';
-        biggestKeyLength += 2;
-        temp.forEach(x => {
-            let {part1, part2} = x;
-            if (part1.length < biggestKeyLength) part1 += ' '.repeat(biggestKeyLength - part1.length);
+        biggestKeyLength += 3;
+        let extraSpace = 0;
+        let lastLine = '';
 
-            result += `${' '.repeat(spaceBeforeKey)}${part1} => ${part2}\n`;
+        temp.forEach(x => {
+            let last1Char = lastLine.slice(-1);
+            let last2Char = lastLine.slice(-2);
+
+            if (last1Char === '{' || lastLine.match(/{('|"`)/)) extraSpace += indent;
+            if (last2Char === '},' || lastLine.match(/('|"`)}/)) extraSpace -= indent;
+
+            if (extraSpace < 0) console.error({
+                lastLine, extraSpace
+            })
+
+            let {part1, part2} = x;
+            // Other line
+            if (!part2) {
+                if (part1.length < biggestKeyLength + indent) part1 = ' '.repeat(biggestKeyLength - part1.length + indent) + part1;
+                lastLine = ' '.repeat(spaceBeforeKey + extraSpace) + part1;
+            } else {
+                if (part1.length < biggestKeyLength) part1 += ' '.repeat(biggestKeyLength - part1.length);
+                lastLine = `${' '.repeat(spaceBeforeKey + extraSpace)}${part1} : ${part2}`;
+            }
+
+            result += lastLine + "\n";
         });
 
         return result;
     }
 
     $('#btn_clear').click(function() {
-        $('textarea').val();
+        $('textarea').val('');
+        $('#text_out1').text('Result goes here');
+        $('#text_status').text('');
     });
 
     $('#btn_format').click(function() {
@@ -103,6 +121,12 @@
         } else {
             $('#text_out1').html('Nothing to copy');
         }
+    });
+
+    $(document).ready(function() {
+      if (debug) $('#text_in').val(
+        ``
+      )
     });
 </script>
 
