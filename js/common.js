@@ -9,7 +9,7 @@ $(document).ready(function() {
         $.get(element + '.html').done(function(data) {
             $('#' + element).html(data);
 
-            if (element === 'nav' && debug) {
+            if (element === 'nav') {
                 // Find active menu
                 let currentUrl = window.location.pathname;
 
