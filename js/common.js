@@ -16,7 +16,7 @@ $(document).ready(function() {
                 $('.navbar-nav a').each(function() {
                     if (currentUrl === $(this).attr('href')) $(this).parent().addClass('active');
 
-                    $(this).attr('href', $(this).attr('href') + '?test=1')
+                    $(this).attr('href', $(this).attr('href'))
                 });
             }
         })

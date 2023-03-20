@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Json 2 Php</title>
+    <title>N97 Json 2 Php</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/plugins/bootstrap/bootstrap.min.css">
@@ -13,7 +13,7 @@
 <body>
 
 <div class="container">
-    <h2>Json 2 Php</h2>
+    <h2>N97 Json 2 Php</h2>
 
     <div class="form-group">
         <textarea class="form-control" rows="10" id="text_in"></textarea>
@@ -43,14 +43,13 @@
 
         let output = $('#text_in').val().trim();
 
-        output = output.replace(/{/g, "[\n")
-        .replace(/}/g, "\n]")
-        .replace(/":/g, "\" => ")
-        .replace(/",/g, "\",\n")
-        .replace(/,"/g, "\,\n\"")
-        .replace(/],"/g, "],\n\"");
+        output = output.split("\n").filter(x => x.trim().length).map(x => {
+            x = x.trim();
+            let arr = x.split(' = ');
+            if (arr.length < 2) return x;
 
-        output = output.substring(1, output.length - 2);
+            return `'${arr[0]}' => '${arr[1]}',`
+        }).join("\n");
 
         $('#text_out').val(output);
         $('#text_out1').html(output);
