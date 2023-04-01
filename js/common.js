@@ -21,6 +21,18 @@ $(document).ready(function() {
             }
         })
     });
+
+    $('.input-money').keyup(function() {
+        let value = $(this).val().replace(/\D/g, '');
+        if (!value) return;
+
+        $(this).val(
+            value
+                .toString()
+                .replace(/^0+/, '')
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        );
+    })
 });
 
 
