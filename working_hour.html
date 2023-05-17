@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Temp</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/plugins/bootstrap/bootstrap.min.css">
+    <script src="/plugins/jquery/jquery.min.js"></script>
+    <script src="/plugins/bootstrap/bootstrap.min.js"></script>
+
+    <script src="js/common.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <h2>Temp</h2>
+
+    <div class="form-group">
+        <textarea class="form-control" rows="10" id="text_in"></textarea>
+    </div>
+
+    <div class="form-group">
+        <button class="btn btn-success" id="btn_start">Start</button>
+    </div>
+
+    <div class="form-group">
+        <ul id="details"></ul>
+        <hr />
+        <h4 class="text-success" id="result"></h4>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script>
+    $('#btn_start').click(function() {
+        let array = $('#text_in').val()
+            .split("\n")
+            .map(x => x.trim())
+            .filter(x => !!x);
+
+        $('#details').html('');
+
+        let result = 0;
+        const format = 'YYYY-MM-DD HH:mm:ss';
+        array.forEach(string => {
+            let temp = string.split('->').map(x => `2020-01-01 ${x.trim().replace('h', ':')}:00`);
+
+            let minutes = moment(temp[1], format).diff(moment(temp[0], format), 'minutes');
+            let hours = minutes/ 60;
+            hours = Math.floor(hours * 100) / 100;
+
+            $('#details').append(`<li>${string}: <span class="text-success">${minutes}m</span>, <span class="text-danger">(${hours}h)</span></li>`)
+            result += minutes;
+        });
+
+        $('#result').text(result + 'm');
+    });
+</script>
+
+</body>
+</html>
