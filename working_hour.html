@@ -53,7 +53,10 @@
             result += minutes;
         });
 
-        $('#result').text(result + 'm');
+        let resultHour = result/ 60;
+        resultHour = Math.floor(resultHour * 100) / 100;
+
+        $('#result').text( + 'm',`${result}m - ${resultHour}h`);
     });
 </script>
 
