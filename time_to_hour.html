@@ -75,7 +75,7 @@
         const remMinutes = totalMinutes % 60;
 
         $('#details').append(`
-            <li>Parsed: Weeks: ${weeks}, Days: ${days}, Hours: ${hours}, Minutes: ${minutes}</li>
+            <li>Thực tế: Tuần: ${weeks}, ngày: ${days}, giờ: ${hours}, phút: ${minutes}</li>
         `);
 
         $('#result').text(`${totalMinutes}m - ${totalHoursDecimal.toFixed(2)}h  (tương đương ${totalHours}h ${remMinutes}m)`);
